@@ -48,7 +48,7 @@ _cmd_cards() {
     rm -f ips.html ips.pdf
 
     # This will generate two files in the base dir: ips.pdf and ips.html
-    python lib/ips-txt-to-html.py $SETTINGS
+    lib/ips-txt-to-html.py $SETTINGS
 
     for f in ips.html ips.pdf; do
         # Remove old versions of cards if they exist
@@ -132,7 +132,7 @@ _cmd_kube() {
     sudo apt-key add - &&
     echo deb http://apt.kubernetes.io/ kubernetes-xenial main |
     sudo tee /etc/apt/sources.list.d/kubernetes.list"
-    pssh "
+    pssh --timeout 200 "
     sudo apt-get update -q &&
     sudo apt-get install -qy kubelet kubeadm kubectl
     kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl"
@@ -393,9 +393,23 @@ pull_tag() {
             ubuntu:latest \
             fedora:latest \
             centos:latest \
+	    elasticsearch:2 \
             postgres \
             redis \
+	    alpine \
+	    registry \
+	    nicolaka/netshoot \
+	    jpetazzo/trainingwheels \
+	    golang \
             training/namer \
+	    dockercoins/hasher \
+	    dockercoins/rng \
+	    dockercoins/webui \
+	    dockercoins/worker \
+	    logstash \
+	    prom/node-exporter \
+	    google/cadvisor \
+	    dockersamples/visualizer \
             nathanleclaire/redisonrails; do
         sudo -u docker docker pull $I
     done'

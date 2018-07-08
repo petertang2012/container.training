@@ -33,6 +33,8 @@ Docker volumes can be used to achieve many things, including:
 
 * Sharing a *single file* between the host and a container.
 
+* Using remote storage and custom storage with "volume drivers".
+
 ---
 
 ## Volumes are special directories in a container
@@ -118,7 +120,7 @@ $ curl localhost:8080
 
 ## Volumes exist independently of containers
 
-If a container is stopped, its volumes still exist and are available.
+If a container is stopped or removed, its volumes still exist and are available.
 
 Volumes can be listed and manipulated with `docker volume` subcommands:
 
@@ -201,7 +203,7 @@ Then run `curl localhost:1234` again to see your changes.
 
 ---
 
-## Managing volumes explicitly
+## Using custom "bind-mounts"
 
 In some cases, you want a specific directory on the host to be mapped
 inside the container:
@@ -244,6 +246,8 @@ of an existing container.
 
 * Newer containers can use `--volumes-from` too.
 
+* Doesn't work across servers, so not usable in clusters (Swarm, Kubernetes).
+
 ---
 
 class: extra-details
@@ -259,7 +263,7 @@ $ docker run -d --name redis28 redis:2.8
 Connect to the Redis container and set some data.
 
 ```bash
-$ docker run -ti --link redis28:redis alpine telnet redis 6379
+$ docker run -ti --link redis28:redis busybox telnet redis 6379
 ```
 
 Issue the following commands:
@@ -298,7 +302,7 @@ class: extra-details
 Connect to the Redis container and see our data.
 
 ```bash
-docker run -ti --link redis30:redis alpine telnet redis 6379
+docker run -ti --link redis30:redis busybox telnet redis 6379
 ```
 
 Issue a few commands.
@@ -394,10 +398,56 @@ has root-like access to the host.]
 You can install plugins to manage volumes backed by particular storage systems,
 or providing extra features. For instance:
 
-* [dvol](https://github.com/ClusterHQ/dvol) - allows to commit/branch/rollback volumes;
-* [Flocker](https://clusterhq.com/flocker/introduction/), [REX-Ray](https://github.com/emccode/rexray) - create and manage volumes backed by an enterprise storage system (e.g. SAN or NAS), or by cloud block stores (e.g. EBS);
-* [Blockbridge](http://www.blockbridge.com/), [Portworx](http://portworx.com/) - provide distributed block store for containers;
-* and much more!
+* [REX-Ray](https://rexray.io/) - create and manage volumes backed by an enterprise storage system (e.g.
+  SAN or NAS), or by cloud block stores (e.g. EBS, EFS).
+
+* [Portworx](http://portworx.com/) - provides distributed block store for containers.
+
+* [Gluster](https://www.gluster.org/) - open source software-defined distributed storage that can scale
+  to several petabytes. It provides interfaces for object, block and file storage.
+
+* and much more at the [Docker Store](https://store.docker.com/search?category=volume&q=&type=plugin)!
+
+---
+
+## Volumes vs. Mounts
+
+* Since Docker 17.06, a new options is available: `--mount`.
+
+* It offers a new, richer syntax to manipulate data in containers.
+
+* It makes an explicit difference between:
+
+  - volumes (identified with a unique name, managed by a storage plugin),
+
+  - bind mounts (identified with a host path, not managed).
+
+* The former `-v` / `--volume` option is still usable.
+
+---
+
+## `--mount` syntax
+
+Binding a host path to a container path:
+
+```bash
+$ docker run \
+  --mount type=bind,source=/path/on/host,target=/path/in/container alpine
+```
+
+Mounting a volume to a container path:
+
+```bash
+$ docker run \
+  --mount source=myvolume,target=/path/in/container alpine
+```
+
+Mounting a tmpfs (in-memory, for temporary files):
+
+```bash
+$ docker run \
+  --mount type=tmpfs,destination=/path/in/container,tmpfs-size=1000000 alpine
+```
 
 ---
 

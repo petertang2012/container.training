@@ -29,7 +29,7 @@ We can arbitrarily distinguish:
 
 * Installing Docker on an existing Linux machine (physical or VM)
 
-* Installing Docker on MacOS or Windows
+* Installing Docker on macOS or Windows
 
 * Installing Docker on a fleet of cloud VMs
 
@@ -37,7 +37,9 @@ We can arbitrarily distinguish:
 
 ## Installing Docker on Linux
 
-* The recommended method is to install the packages supplied by Docker Inc.
+* The recommended method is to install the packages supplied by Docker Inc.:
+
+  https://store.docker.com
 
 * The general method is:
 
@@ -55,13 +57,35 @@ We can arbitrarily distinguish:
 
 ---
 
-## Installing Docker on MacOS and Windows
+class: extra-details
 
-* On MacOS, the recommended method is to use Docker4Mac:
+## Docker Inc. packages vs distribution packages
+
+* Docker Inc. releases new versions monthly (edge) and quarterly (stable)
+
+* Releases are immediately available on Docker Inc.'s package repositories
+
+* Linux distros don't always update to the latest Docker version
+
+  (Sometimes, updating would break their guidelines for major/minor upgrades)
+
+* Sometimes, some distros have carried packages with custom patches
+
+* Sometimes, these patches added critical security bugs ☹
+
+* Installing through Docker Inc.'s repositories is a bit of extra work …
+
+  … but it is generally worth it!
+
+---
+
+## Installing Docker on macOS and Windows
+
+* On macOS, the recommended method is to use Docker for Mac:
 
   https://docs.docker.com/docker-for-mac/install/
 
-* On Windows 10 Pro, Enterprise, and Eduction, you can use Docker4Windows:
+* On Windows 10 Pro, Enterprise, and Education, you can use Docker for Windows:
 
   https://docs.docker.com/docker-for-windows/install/
 
@@ -69,9 +93,36 @@ We can arbitrarily distinguish:
 
   https://docs.docker.com/toolbox/toolbox_install_windows/
 
+* On Windows Server 2016, you can also install the native engine:
+
+  https://docs.docker.com/install/windows/docker-ee/
+
 ---
 
-## Running Docker on MacOS and Windows
+## Docker for Mac and Docker for Windows
+
+* Special Docker Editions that integrate well with their respective host OS
+
+* Provide user-friendly GUI to edit Docker configuration and settings
+
+* Leverage the host OS virtualization subsystem (e.g. the [Hypervisor API](https://developer.apple.com/documentation/hypervisor) on macOS)
+
+* Installed like normal user applications on the host
+
+* Under the hood, they both run a tiny VM (transparent to our daily use)
+
+* Access network resources like normal applications
+  <br/>(and therefore, play better with enterprise VPNs and firewalls)
+
+* Support filesystem sharing through volumes (we'll talk about this later)
+
+* They only support running one Docker VM at a time ...
+  <br/>
+  ... but we can use `docker-machine`, the Docker Toolbox, VirtualBox, etc. to get a cluster.
+
+---
+
+## Running Docker on macOS and Windows
 
 When you execute `docker version` from the terminal:
 
@@ -85,25 +136,6 @@ When you execute `docker version` from the terminal:
 All communication with the Docker Engine happens over the API.
 
 This will also allow to use remote Engines exactly as if they were local.
-
----
-
-## Docker4Mac and Docker4Windows
-
-* They let you run Docker without VirtualBox
-
-* They are installed like normal applications (think QEMU, but faster)
-
-* They access network resources like normal applications
-  <br/>(and therefore, play well with enterprise VPNs and firewalls)
-
-* They support filesystem sharing through volumes (we'll talk about this later)
-
-* They only support running one Docker VM at a time ...
-
-  ... so if you want to run a full cluster locally, install e.g. the Docker Toolbox
-
-* They can co-exist with the Docker Toolbox
 
 ---
 

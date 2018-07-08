@@ -34,18 +34,6 @@ In this section, we will see more Dockerfile commands.
 
 ---
 
-## The `MAINTAINER` instruction
-
-The `MAINTAINER` instruction tells you who wrote the `Dockerfile`.
-
-```dockerfile
-MAINTAINER Docker Education Team <education@docker.com>
-```
-
-It's optional but recommended.
-
----
-
 ## The `RUN` instruction
 
 The `RUN` instruction can be specified in two ways.
@@ -93,8 +81,6 @@ RUN apt-get update && apt-get install -y wget && apt-get clean
 ```
 
 It is also possible to break a command onto multiple lines:
-
-It is possible to execute multiple commands in a single step:
 
 ```dockerfile
 RUN apt-get update \
@@ -369,7 +355,7 @@ class: extra-details
 
 ## Overriding the `ENTRYPOINT` instruction
 
-The entry point can be overriden as well.
+The entry point can be overridden as well.
 
 ```bash
 $ docker run -it training/ls
@@ -430,5 +416,4 @@ ONBUILD COPY . /src
 ```
 
 * You can't chain `ONBUILD` instructions with `ONBUILD`.
-* `ONBUILD` can't be used to trigger `FROM` and `MAINTAINER`
-  instructions.
+* `ONBUILD` can't be used to trigger `FROM` instructions.

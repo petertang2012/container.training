@@ -1,4 +1,4 @@
-# Trainer tools to create and prepare VMs for Docker workshops on AWS
+# Trainer tools to create and prepare VMs for Docker workshops on AWS or Azure
 
 ## Prerequisites
 
@@ -14,8 +14,9 @@ And if you want to generate printable cards:
 ## General Workflow
 
 - fork/clone repo
-- set required environment variables for AWS
+- set required environment variables
 - create your own setting file from `settings/example.yaml`
+- if necessary, increase allowed open files: `ulimit -Sn 10000`
 - run `./workshopctl` commands to create instances, install docker, setup each users environment in node1, other management tasks
 - run `./workshopctl cards` command to generate PDF for printing handouts of each users host IP's and login info
 
@@ -102,7 +103,7 @@ wrap         Run this program in a container
 - Run `./workshopctl deploy TAG settings/somefile.yaml` to run `lib/postprep.py` via parallel-ssh
   - If it errors or times out, you should be able to rerun
   - Requires good connection to run all the parallel SSH connections, up to 100 parallel (ProTip: create dedicated management instance in same AWS region where you run all these utils from)
-- Run `./workshopctl pull-images TAG` to pre-pull a bunch of Docker images to the instances
+- Run `./workshopctl pull_images TAG` to pre-pull a bunch of Docker images to the instances
 - Run `./workshopctl cards TAG settings/somefile.yaml` generates PDF/HTML files to print and cut and hand out to students
 - *Have a great workshop*
 - Run `./workshopctl stop TAG` to terminate instances.
@@ -209,7 +210,7 @@ The `postprep.py` file will be copied via parallel-ssh to all of the VMs and exe
 
 #### Pre-pull images
 
-    $ ./workshopctl pull-images TAG
+    $ ./workshopctl pull_images TAG
 
 #### Generate cards
 
